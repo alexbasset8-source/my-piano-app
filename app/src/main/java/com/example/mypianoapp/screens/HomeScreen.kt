@@ -1,13 +1,11 @@
 package com.example.mypianoapp.screens
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.MusicNote
@@ -23,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.mypianoapp.components.progress.ProgressSection
-import com.example.mypianoapp.presentation.components.xp.XpCard
+import com.example.mypianoapp.components.xp.XpCard
 import com.example.mypianoapp.ui.theme.*
 
 @Composable
@@ -187,7 +185,7 @@ private fun HeroSessionCard() {
                     color = TextPrimary
                 )
                 Icon(
-                    imageVector = Icons.Default.ArrowForward,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null,
                     tint = TextPrimary,
                     modifier = Modifier.size(18.dp)

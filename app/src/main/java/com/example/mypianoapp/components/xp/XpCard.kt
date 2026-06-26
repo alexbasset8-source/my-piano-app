@@ -1,4 +1,4 @@
-package com.example.mypianoapp.presentation.components.xp
+package com.example.mypianoapp.components.xp
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
