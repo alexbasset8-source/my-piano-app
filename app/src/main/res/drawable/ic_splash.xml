@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Fond violet arrondi -->
+    <path
+        android:pathData="M16,54 A38,38 0 1,1 92,54 A38,38 0 1,1 16,54 Z"
+        android:fillColor="#7C3AED"/>
+
+    <!-- Touches blanches du piano -->
+    <path
+        android:pathData="M34,36 L34,72 L40,72 L40,36 Z"
+        android:fillColor="#F0F0FF"/>
+    <path
+        android:pathData="M42,36 L42,72 L48,72 L48,36 Z"
+        android:fillColor="#F0F0FF"/>
+    <path
+        android:pathData="M50,36 L50,72 L56,72 L56,36 Z"
+        android:fillColor="#F0F0FF"/>
+    <path
+        android:pathData="M58,36 L58,72 L64,72 L64,36 Z"
+        android:fillColor="#F0F0FF"/>
+    <path
+        android:pathData="M66,36 L66,72 L72,72 L72,36 Z"
+        android:fillColor="#F0F0FF"/>
+
+    <!-- Touches noires du piano -->
+    <path
+        android:pathData="M38,36 L38,56 L44,56 L44,36 Z"
+        android:fillColor="#0A0A0F"/>
+    <path
+        android:pathData="M46,36 L46,56 L52,56 L52,36 Z"
+        android:fillColor="#0A0A0F"/>
+    <path
+        android:pathData="M62,36 L62,56 L68,56 L68,36 Z"
+        android:fillColor="#0A0A0F"/>
+
+</vector>

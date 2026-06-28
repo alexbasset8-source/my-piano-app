@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.MyPianoApp" parent="@android:style/Theme.Material.NoActionBar">
+    <!-- Thème principal — parent natif compatible sans AppCompat -->
+    <style name="Theme.MyPianoApp" parent="android:Theme.DeviceDefault.NoActionBar">
         <item name="android:windowBackground">#0A0A0F</item>
         <item name="android:statusBarColor">#0A0A0F</item>
-        <item name="android:navigationBarColor">#13131C</item>
+        <item name="android:navigationBarColor">#0A0A0F</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <!-- Splash screen — windowSplashScreenBrandingImage retiré (API 31 seulement) -->
+    <style name="Theme.MyPianoApp.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#0A0A0F</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.MyPianoApp</item>
     </style>
 </resources>

@@ -13,16 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.mypianoapp.data.UserProgress
 import com.example.mypianoapp.ui.theme.*
 
 @Composable
-fun XpCard() {
-    val xpProgress = 0.25f
+fun XpCard(progress: UserProgress) {
     var started by remember { mutableStateOf(false) }
     val animatedXp by animateFloatAsState(
-        targetValue = if (started) xpProgress else 0f,
+        targetValue  = if (started) progress.xpFraction else 0f,
         animationSpec = tween(1400),
-        label = "xp"
+        label        = "xp"
     )
     LaunchedEffect(Unit) { started = true }
 
@@ -36,7 +36,6 @@ fun XpCard() {
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Badge niveau
         Box(
             modifier = Modifier
                 .size(52.dp)
@@ -53,8 +52,16 @@ fun XpCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Niveau 1", style = MaterialTheme.typography.titleSmall, color = TextPrimary)
-                Text("25 / 100 XP", style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                Text(
+                    "Niveau ${progress.level}",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = TextPrimary
+                )
+                Text(
+                    "${progress.xpProgressInLevel} / ${progress.xpNeededForNextLevel} XP",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondary
+                )
             }
             Box(
                 modifier = Modifier
@@ -73,10 +80,13 @@ fun XpCard() {
             }
         }
 
-        // Streak
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("🔥", style = MaterialTheme.typography.titleMedium)
-            Text("3j", style = MaterialTheme.typography.labelSmall, color = IvoryGold)
+            Text(
+                "${progress.currentStreak}j",
+                style = MaterialTheme.typography.labelSmall,
+                color = IvoryGold
+            )
         }
     }
 }

@@ -12,19 +12,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.mypianoapp.data.UserProgress
 import com.example.mypianoapp.ui.theme.*
 
 @Composable
-fun ProgressSection() {
-    val progress = 0.12f
+fun ProgressSection(progress: UserProgress) {
     var started by remember { mutableStateOf(false) }
     val animatedProgress by animateFloatAsState(
-        targetValue = if (started) progress else 0f,
+        targetValue   = if (started) progress.globalProgressFraction else 0f,
         animationSpec = tween(durationMillis = 1200),
-        label = "progress"
+        label         = "progress"
     )
-
     LaunchedEffect(Unit) { started = true }
+
+    val pct = (progress.globalProgressFraction * 100).toInt()
 
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(
@@ -33,17 +34,16 @@ fun ProgressSection() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Progression globale",
+                text  = "Progression globale",
                 style = MaterialTheme.typography.labelMedium,
                 color = TextSecondary
             )
             Text(
-                text = "${(animatedProgress * 100).toInt()} %",
+                text  = "$pct %",
                 style = MaterialTheme.typography.labelMedium,
                 color = KeysVioletLight
             )
         }
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
