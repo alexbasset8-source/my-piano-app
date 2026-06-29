@@ -144,7 +144,7 @@ private fun ExerciseTimer(
     val targetSeconds = remember(durationLabel) {
         val mins = Regex("""(\d+)\s*min""").find(durationLabel)?.groupValues?.get(1)?.toIntOrNull()
         val secs = Regex("""(\d+)\s*sec""").find(durationLabel)?.groupValues?.get(1)?.toIntOrNull()
-        val total = (mins ?: 0) * 60 + (secs ?: 0)
+        val total = (mins?.times(60) ?: 0) + (secs ?: 0)
         if (total > 0) total else 60
     }
 

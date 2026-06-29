@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -44,34 +44,34 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Foundation (HorizontalPager, etc.)
-    implementation("androidx.compose.foundation:foundation")
+    implementation(libs.androidx.compose.foundation)
 
     // Material Icons Extended
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Navigation Compose
-    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation(libs.androidx.navigation.compose)
 
     // ViewModel + Lifecycle Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     // DataStore
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation(libs.androidx.datastore.preferences)
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(libs.kotlinx.coroutines.android)
 
     // Serialization JSON
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.kotlinx.serialization.json)
 
     // Splash Screen
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.core.splashscreen)
 
     // Tests
     testImplementation(libs.junit)

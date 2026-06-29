@@ -52,6 +52,9 @@ fun HomeScreen(progress: UserProgress, onNavigate: (String) -> Unit) {
             SectionLabel("Continuer")
             QuickActionsGrid(onNavigate = onNavigate)
 
+            SectionLabel("Mini-jeu")
+            GoblinGameCard(onClick = { onNavigate("goblin_game") })
+
             SectionLabel("Aujourd'hui")
             DailyStatsRow(progress = progress)
         }
@@ -194,5 +197,51 @@ private fun StatCard(emoji: String, value: String, label: String, modifier: Modi
         Text(emoji, style = MaterialTheme.typography.titleLarge)
         Text(value, style = MaterialTheme.typography.headlineMedium, color = TextPrimary)
         Text(label, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
+    }
+}
+
+@Composable
+private fun GoblinGameCard(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                Brush.linearGradient(
+                    listOf(Color(0xFF1A0A2E), Color(0xFF0D1A2E))
+                )
+            )
+            .border(1.dp, Color(0xFF3D2060), RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick)
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("👺", style = MaterialTheme.typography.displaySmall)
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text(
+                    "Goblin Attack !",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = TextPrimary
+                )
+                Text(
+                    "Joue les notes pour repousser les gobelins",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondary
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0xFF7C3AED).copy(0.2f))
+                    .border(1.dp, Color(0xFF7C3AED).copy(0.4f), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text("Jouer", style = MaterialTheme.typography.labelMedium, color = KeysVioletLight)
+            }
+        }
     }
 }

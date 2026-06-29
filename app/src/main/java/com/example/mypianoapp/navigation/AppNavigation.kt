@@ -31,18 +31,18 @@ fun AppNavigation() {
     val newBadges       by viewModel.newBadges.collectAsStateWithLifecycle()
 
     // ── Phase de démarrage : splash → onboarding → app ───────────────
-    var splashDone by remember { mutableStateOf(false) }
+    var splashDone by remember { mutableStateOf(value = false) }
 
     AnimatedContent(
         targetState  = Triple(splashDone, onboardingDone, progress.userName),
         transitionSpec = {
             fadeIn(tween(400)) togetherWith fadeOut(tween(300))
         },
-        label = "app_phase"
+        label = "app_phase",
     ) { (splash, onboarded, _) ->
         when {
             // 1. Splash
-            !splash -> SplashScreen(onFinished = { splashDone = true })
+            !splash -> SplashScreen { splashDone = true }
 
             // 2. Onboarding (premier lancement)
             !onboarded -> OnboardingScreen(
@@ -73,7 +73,7 @@ private fun MainApp(
     val currentRoute  by navController.currentBackStackEntryAsState()
     val progress      by viewModel.progress.collectAsStateWithLifecycle()
 
-    val hideBottomBar = listOf("lesson_detail/", "exercise_detail/")
+    val hideBottomBar = listOf("lesson_detail/", "exercise_detail/", "goblin_game")
         .any { currentRoute?.destination?.route?.startsWith(it) == true }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -102,6 +102,9 @@ private fun MainApp(
                         progress        = progress,
                         onExerciseClick = { id -> navController.navigate("exercise_detail/$id") }
                     )
+                }
+                composable("goblin_game") {
+                    GoblinGameScreen(onBack = { navController.popBackStack() })
                 }
                 composable(Screen.Profile.route) {
                     ProfileScreen(
