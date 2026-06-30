@@ -29,7 +29,7 @@ import com.example.mypianoapp.ui.theme.*
 @Composable
 fun ExerciseScreen(
     progress: UserProgress,
-    onExerciseClick: (Int) -> Unit
+    onExerciseClick: (Int) -> Unit,
 ) {
     val exercises = ExerciseCatalog.exercises
     val unlockedCount = exercises.count { progress.completedLessonIds.size >= it.minLessonsRequired }
@@ -53,7 +53,7 @@ fun ExerciseScreen(
 
         exercises.forEach { exercise ->
             val unlocked = progress.completedLessonIds.size >= exercise.minLessonsRequired
-            var visible by remember { mutableStateOf(false) }
+            var visible by remember { mutableStateOf(value = false) }
             LaunchedEffect(Unit) { visible = true }
 
             AnimatedVisibility(
@@ -63,7 +63,7 @@ fun ExerciseScreen(
                 ExerciseCard(
                     exercise = exercise,
                     unlocked = unlocked,
-                    onClick  = { if (unlocked) onExerciseClick(exercise.id) }
+                    onClick  = { if (unlocked) onExerciseClick(exercise.id) },
                 )
             }
         }

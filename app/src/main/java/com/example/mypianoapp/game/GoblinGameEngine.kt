@@ -41,7 +41,7 @@ data class GoblinGameState(
     val combo: Int = 0,
     val maxCombo: Int = 0,
     val flashNote: String? = null,       // note jouée (feedback visuel)
-    val flashCorrect: Boolean = true     // vrai = hit, faux = miss
+    val flashCorrect: Boolean = true,    // vrai = hit, faux = miss
 )
 
 // ── Moteur ────────────────────────────────────────────────────────────────
@@ -74,7 +74,7 @@ class GoblinGameEngine(private val scope: CoroutineScope) {
         // Cherche le gobelin le plus proche portant cette note
         val target = state.goblins
             .asSequence()
-            .filter { (it.alive && it.note == note) }
+            .filter { (it.alive && (it.note == note)) }
             .minByOrNull { it.x }  // le plus avancé en priorité
 
         if (target != null) {
@@ -103,7 +103,7 @@ class GoblinGameEngine(private val scope: CoroutineScope) {
 
         // Reset flash après 200ms
         scope.launch {
-            delay(200)
+            delay(200.milliseconds)
             state = state.copy(flashNote = null)
         }
     }
@@ -205,7 +205,7 @@ class GoblinGameEngine(private val scope: CoroutineScope) {
             gameLoopJob?.cancel()
             scope.launch {
                 state = state.copy(phase = GamePhase.WAVE_CLEAR)
-                delay(1800)
+                delay(1800.milliseconds)
                 if (current.wave >= maxWave) {
                     state = state.copy(phase = GamePhase.VICTORY)
                 } else {

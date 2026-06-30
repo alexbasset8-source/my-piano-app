@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 
 import androidx.compose.ui.input.pointer.pointerInput
@@ -34,7 +35,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun PianoScreen(onMinutesPlayed: (Int) -> Unit) {
+fun PianoScreen(
+    onMinutesPlayed: (Int) -> Unit,
+    onPlaySong: () -> Unit = {}
+) {
     val context = LocalContext.current
     val scope   = rememberCoroutineScope()
 
@@ -116,6 +120,9 @@ fun PianoScreen(onMinutesPlayed: (Int) -> Unit) {
             }
         }
 
+        // ── Carte Mode Chanson ────────────────────────────────────────
+        SongModeCard(onClick = onPlaySong)
+
         // ── Note affichée ─────────────────────────────────────────────
         Box(
             modifier = Modifier
@@ -140,7 +147,7 @@ fun PianoScreen(onMinutesPlayed: (Int) -> Unit) {
 
         // ── Clavier ───────────────────────────────────────────────────
         BoxWithConstraints(modifier = Modifier.fillMaxWidth().height(180.dp)) {
-            val totalWidth  = maxWidth
+            val totalWidth  = this.maxWidth
             val whiteWidth  = totalWidth / whiteKeys.size
             val gap         = 2.dp
             val blackWidth  = whiteWidth * 0.62f
@@ -504,4 +511,50 @@ private fun tempoLabel(bpm: Int) = when {
     bpm < 176 -> "Vivace"
     bpm < 200 -> "Presto"
     else      -> "Prestissimo"
+}
+
+@Composable
+private fun SongModeCard(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                Brush.linearGradient(
+                    listOf(Color(0xFF1A0A2E), Color(0xFF0A1A2E))
+                )
+            )
+            .border(1.dp, Color(0xFF3D2060), RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick)
+            .padding(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("🎼", style = MaterialTheme.typography.displaySmall)
+            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text(
+                    "Mode Chanson",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = TextPrimary
+                )
+                Text(
+                    "Joue \"Lettre à Élise\" en suivant les notes",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondary
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0xFF7C3AED).copy(0.2f))
+                    .border(1.dp, Color(0xFF7C3AED).copy(0.4f), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Text("Jouer", style = MaterialTheme.typography.labelMedium, color = KeysVioletLight)
+            }
+        }
+    }
 }

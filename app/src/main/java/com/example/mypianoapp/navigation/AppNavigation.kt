@@ -73,7 +73,7 @@ private fun MainApp(
     val currentRoute  by navController.currentBackStackEntryAsState()
     val progress      by viewModel.progress.collectAsStateWithLifecycle()
 
-    val hideBottomBar = listOf("lesson_detail/", "exercise_detail/", "goblin_game")
+    val hideBottomBar = listOf("lesson_detail/", "exercise_detail/", "goblin_game", "song_player")
         .any { currentRoute?.destination?.route?.startsWith(it) == true }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -95,7 +95,10 @@ private fun MainApp(
                     )
                 }
                 composable(Screen.Piano.route) {
-                    PianoScreen(onMinutesPlayed = { viewModel.addPracticeMinutes(it) })
+                    PianoScreen(
+                        onMinutesPlayed = { viewModel.addPracticeMinutes(it) },
+                        onPlaySong      = { navController.navigate("song_player") }
+                    )
                 }
                 composable(Screen.Exercises.route) {
                     ExerciseScreen(
@@ -105,6 +108,9 @@ private fun MainApp(
                 }
                 composable("goblin_game") {
                     GoblinGameScreen(onBack = { navController.popBackStack() })
+                }
+                composable("song_player") {
+                    SongPlayerScreen(onBack = { navController.popBackStack() })
                 }
                 composable(Screen.Profile.route) {
                     ProfileScreen(

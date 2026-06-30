@@ -47,33 +47,16 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-
-    // Foundation (HorizontalPager, etc.)
     implementation(libs.androidx.compose.foundation)
-
-    // Material Icons Extended
     implementation(libs.androidx.compose.material.icons.extended)
-
-    // Navigation Compose
     implementation(libs.androidx.navigation.compose)
-
-    // ViewModel + Lifecycle Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
-
-    // DataStore
     implementation(libs.androidx.datastore.preferences)
-
-    // Coroutines
     implementation(libs.kotlinx.coroutines.android)
-
-    // Serialization JSON
     implementation(libs.kotlinx.serialization.json)
-
-    // Splash Screen
     implementation(libs.androidx.core.splashscreen)
 
-    // Tests
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

@@ -27,7 +27,7 @@ class PianoSoundEngine(private val context: Context) {
         "Sol#" to "sounds/Gs4.mp3",
         "La"   to "sounds/A4.mp3",
         "La#"  to "sounds/As4.mp3",
-        "Si"   to "sounds/B4.mp3"
+        "Si"   to "sounds/B4.mp3",
     )
 
     private val audioAttributes = AudioAttributes.Builder()
@@ -49,7 +49,7 @@ class PianoSoundEngine(private val context: Context) {
                     afd.close()
                 }
                 players[note] = player
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // Sample manquant — on ignore silencieusement
             }
         }
@@ -63,7 +63,7 @@ class PianoSoundEngine(private val context: Context) {
                 } else {
                     player.start()
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // Réinitialiser si état invalide
             }
         }

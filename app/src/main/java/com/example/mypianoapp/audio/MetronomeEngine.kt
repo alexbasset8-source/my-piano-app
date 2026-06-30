@@ -2,7 +2,6 @@ package com.example.mypianoapp.audio
 
 import android.media.AudioAttributes
 import android.media.AudioFormat
-import android.media.AudioManager
 import android.media.AudioTrack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +69,7 @@ class MetronomeEngine {
     private fun playClick(accent: Boolean) {
         val freq      = if (accent) 1200.0 else 800.0
         val durationMs = 40
-        val numSamples = sampleRate * durationMs / 1000
+        val numSamples = (sampleRate * durationMs) / 1000
         val samples   = ShortArray(numSamples)
         val decay     = 80.0   // vitesse de décroissance exponentielle
 
@@ -85,7 +84,7 @@ class MetronomeEngine {
         val bufferSize = AudioTrack.getMinBufferSize(
             sampleRate,
             AudioFormat.CHANNEL_OUT_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
+            AudioFormat.ENCODING_PCM_16BIT,
         )
         try {
             val track = AudioTrack.Builder()
@@ -114,7 +113,7 @@ class MetronomeEngine {
                 track.stop()
                 track.release()
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Ignore si l'audio n'est pas disponible
         }
     }
