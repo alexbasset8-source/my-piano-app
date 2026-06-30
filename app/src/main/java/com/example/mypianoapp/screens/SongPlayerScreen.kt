@@ -28,7 +28,7 @@ import com.example.mypianoapp.audio.PianoSoundEngine
 import com.example.mypianoapp.song.*
 import com.example.mypianoapp.ui.theme.*
 
-// ── Couleurs par note ─────────────────────────────────────────────────────
+// ━━ Couleurs par note ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 private val noteColorMap = mapOf(
     "Do"  to Color(0xFF7C3AED), "Do#" to Color(0xFF9D5FF5),
     "Ré"  to Color(0xFF06B6D4), "Ré#" to Color(0xFF0EA5E9),
@@ -40,7 +40,7 @@ private val noteColorMap = mapOf(
 )
 private fun noteColor(note: String?) = noteColorMap[note] ?: Color(0xFF7C3AED)
 
-// ── Mapping note → index colonne clavier (blanches 0-6) ──────────────────
+// ━━ Mapping note → index colonne clavier (blanches 0-6) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 private val noteToWhiteIndex = mapOf(
     "Do" to 0, "Ré" to 1, "Mi" to 2, "Fa" to 3,
     "Sol" to 4, "La" to 5, "Si" to 6
@@ -66,7 +66,9 @@ fun SongPlayerScreen(onBack: () -> Unit) {
         PlayerPhase.IDLE     -> SongMenuScreen(
             song       = lettrAElise,
             difficulty = state.difficulty,
+            leftHandEnabled = state.leftHandEnabled,
             onSelect   = { engine.selectDifficulty(it) },
+            onToggleLeftHand = { engine.setLeftHandEnabled(it) },
             onStart    = { engine.start() },
             onBack     = onBack
         )
@@ -85,7 +87,7 @@ fun SongPlayerScreen(onBack: () -> Unit) {
     }
 }
 
-// ── Vue de jeu principale ─────────────────────────────────────────────────
+// ━━ Vue de jeu principale ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun SongPlayView(
@@ -104,10 +106,16 @@ private fun SongPlayView(
     Box(modifier = Modifier.fillMaxSize().background(EbonyDeep)) {
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // ── HUD ───────────────────────────────────────────────────
-            SongHud(state = state, onPause = { engine.pause() }, onBack = onBack)
+            // ━━ HUD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            SongHud(
+                state = state,
+                leftHandEnabled = state.leftHandEnabled,
+                onToggleLeftHand = { engine.setLeftHandEnabled(it) },
+                onPause = { engine.pause() },
+                onBack = onBack
+            )
 
-            // ── Zone de défilement ────────────────────────────────────
+            // ━━ Zone de défilement ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -118,6 +126,7 @@ private fun SongPlayView(
                     visibleBeats = visibleBeats,
                     notes        = visibleNotes,
                     difficulty   = state.difficulty,
+                    leftHandEnabled = state.leftHandEnabled,
                     modifier     = Modifier.fillMaxSize()
                 )
 
@@ -134,7 +143,7 @@ private fun SongPlayView(
                 }
             }
 
-            // ── Clavier ───────────────────────────────────────────────
+            // ━━ Clavier ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             SongKeyboard(
                 currentBeat  = state.currentBeat,
                 activeNotes  = visibleNotes.filter {
@@ -150,7 +159,7 @@ private fun SongPlayView(
     }
 }
 
-// ── Autoroute de notes (Guitar Hero highway) ──────────────────────────────
+// ━━ Autoroute de notes (Guitar Hero highway) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun NoteHighway(
@@ -158,6 +167,7 @@ private fun NoteHighway(
     visibleBeats: Float,
     notes: List<SongNote>,
     difficulty: Difficulty,
+    leftHandEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     val whiteCount = 7
@@ -168,7 +178,7 @@ private fun NoteHighway(
         val h = size.height
         val colW = w / whiteCount  // largeur d'une colonne blanche
 
-        // ── Fond ────────────────────────────────────────────────────
+        // ━━ Fond ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         drawRect(Color(0xFF0A0A18))
 
         // Lignes de colonnes verticales
@@ -215,7 +225,7 @@ private fun NoteHighway(
             strokeWidth = 8f
         )
 
-        // ── Notes ────────────────────────────────────────────────────
+        // ━━ Notes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         notes.forEach { note ->
             if (note.note == null) return@forEach
 
@@ -226,15 +236,17 @@ private fun NoteHighway(
             val color  = noteColor(note.note)
 
             if (note.hand == Hand.LEFT) {
-                // MG : affichage en gris transparent (info uniquement)
-                drawLeftNote(note.note, noteY, noteH, colW, color.copy(alpha = 0.35f))
+                // MG : affichage en gris transparent (info uniquement) ou masqué si désactivé
+                if (leftHandEnabled) {
+                    drawLeftNote(note.note, noteY, noteH, colW, color.copy(alpha = 0.35f))
+                }
             } else {
                 // MD : bloc coloré plein
                 drawRightNote(note.note, noteY, noteH, colW, color, hitY)
             }
         }
 
-        // ── Indicateurs de colonne en bas ────────────────────────────
+        // ━━ Indicateurs de colonne en bas ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         for (i in 0 until whiteCount) {
             val cx = i * colW + colW / 2
             drawCircle(
@@ -323,11 +335,13 @@ private fun DrawScope.drawLeftNote(
     )
 }
 
-// ── HUD ───────────────────────────────────────────────────────────────────
+// ━━ HUD ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun SongHud(
     state: SongPlayerState,
+    leftHandEnabled: Boolean,
+    onToggleLeftHand: (Boolean) -> Unit,
     onPause: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -356,7 +370,7 @@ private fun SongHud(
         }
 
         // Score
-        HudPill("⭐ ${state.score}", KeysViolet)
+        HudPill("✨ ${state.score}", KeysViolet)
 
         // Combo
         if (state.combo > 1) HudPill("🔥 ×${state.combo}", NotesTeal)
@@ -369,6 +383,20 @@ private fun SongHud(
         })
 
         Spacer(Modifier.weight(1f))
+
+        // Bouton main gauche
+        val leftHandIcon = if (leftHandEnabled) Icons.Default.VolumeUp else Icons.Default.VolumeOff
+        val leftHandColor = if (leftHandEnabled) HarmonyGreen else TextMuted
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(EbonySurface)
+                .pointerInput(Unit) { detectTapGestures { onToggleLeftHand(!leftHandEnabled) } },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(leftHandIcon, "Main gauche", tint = leftHandColor, modifier = Modifier.size(16.dp))
+        }
 
         // Difficulté
         HudPill(state.difficulty.label, TextSecondary)
@@ -403,7 +431,7 @@ private fun HudPill(text: String, color: Color) {
     }
 }
 
-// ── Clavier ───────────────────────────────────────────────────────────────
+// ━━ Clavier ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun SongKeyboard(
@@ -509,14 +537,14 @@ private fun SongKeyboard(
     }
 }
 
-// ── Badge de feedback ─────────────────────────────────────────────────────
+// ━━ Badge de feedback ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun FeedbackBadge(feedback: FeedbackEvent, modifier: Modifier = Modifier) {
     val (text, color) = when (feedback.type) {
         FeedbackType.PERFECT -> "PERFECT ✨" to IvoryGold
         FeedbackType.GOOD    -> "GOOD 👍"    to HarmonyGreen
-        FeedbackType.MISS    -> "MISS ✗"     to DissonanceRed
+        FeedbackType.MISS    -> "MISS ❌"     to DissonanceRed
     }
     AnimatedVisibility(
         visible = true,
@@ -536,7 +564,7 @@ private fun FeedbackBadge(feedback: FeedbackEvent, modifier: Modifier = Modifier
     }
 }
 
-// ── Overlay Pause ─────────────────────────────────────────────────────────
+// ━━ Overlay Pause ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun PauseOverlay(onResume: () -> Unit, onRestart: () -> Unit) {
@@ -585,13 +613,15 @@ private fun GamePillBtn(label: String, bg: Color, onClick: () -> Unit) {
     }
 }
 
-// ── Menu sélection ────────────────────────────────────────────────────────
+// ━━ Menu sélection ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun SongMenuScreen(
     song: Song,
     difficulty: Difficulty,
+    leftHandEnabled: Boolean,
     onSelect: (Difficulty) -> Unit,
+    onToggleLeftHand: (Boolean) -> Unit,
     onStart: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -633,11 +663,35 @@ private fun SongMenuScreen(
             listOf(
                 "🎵 Les blocs colorés tombent vers le bas",
                 "⌨️ Joue la note quand le bloc arrive en bas",
-                "🤖 La main gauche est jouée automatiquement",
-                "👻 Les blocs transparents = main gauche (info)"
+                if (leftHandEnabled) "👹 La main gauche est jouée automatiquement" else "🔇 Main gauche désactivée",
+                "🟦 Les blocs transparents = main gauche (info)"
             ).forEach {
                 Text(it, style = MaterialTheme.typography.bodySmall, color = TextSecondary)
             }
+        }
+
+        // Option main gauche
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(EbonyCard)
+                .border(1.dp, EbonyBorder, RoundedCornerShape(16.dp))
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Main gauche", style = MaterialTheme.typography.bodyMedium, color = TextPrimary)
+            Switch(
+                checked = leftHandEnabled,
+                onCheckedChange = onToggleLeftHand,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = HarmonyGreen,
+                    checkedTrackColor = HarmonyGreen.copy(0.5f),
+                    uncheckedThumbColor = TextMuted,
+                    uncheckedTrackColor = TextMuted.copy(0.3f)
+                )
+            )
         }
 
         // Difficulté
@@ -698,7 +752,7 @@ private fun SongMenuScreen(
     }
 }
 
-// ── Écran de résultats ────────────────────────────────────────────────────
+// ━━ Écran de résultats ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 @Composable
 private fun SongResultScreen(
@@ -742,14 +796,14 @@ private fun SongResultScreen(
 
         // Stats
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatPill("⭐",  "${state.score}",        "Score",   KeysVioletLight, Modifier.weight(1f))
+            StatPill("✨",  "${state.score}",        "Score",   KeysVioletLight, Modifier.weight(1f))
             StatPill("🎯",  "$accuracy%",            "Précision", IvoryGold,    Modifier.weight(1f))
-            StatPill("🔥",  "×${state.maxCombo}",    "Combo max", NotesTeal,    Modifier.weight(1f))
+            StatPill("🔥", "×${state.maxCombo}",    "Combo max", NotesTeal,    Modifier.weight(1f))
         }
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatPill("✨", "${state.perfectCount}", "Perfect",  IvoryGold,      Modifier.weight(1f))
+            StatPill("✅", "${state.perfectCount}", "Perfect",  IvoryGold,      Modifier.weight(1f))
             StatPill("👍", "${state.goodCount}",    "Good",     HarmonyGreen,   Modifier.weight(1f))
-            StatPill("✗",  "${state.missCount}",    "Miss",     DissonanceRed,  Modifier.weight(1f))
+            StatPill("❌",  "${state.missCount}",    "Miss",     DissonanceRed,  Modifier.weight(1f))
         }
 
         Spacer(Modifier.weight(1f))
