@@ -9,7 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// ── Difficulté ────────────────────────────────────────────────────────────
+// ━━ Difficulté ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 enum class Difficulty(
     val label: String,
@@ -21,7 +21,7 @@ enum class Difficulty(
     NORMAL( "Normal", 1.00f, 280, 260f)
 }
 
-// ── État ──────────────────────────────────────────────────────────────────
+// ━━ État ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 enum class PlayerPhase { IDLE, COUNTDOWN, PLAYING, PAUSED, FINISHED }
 
@@ -51,10 +51,11 @@ data class SongPlayerState(
     val countdown: Int = 3,
     val activeNotes: List<ActiveNote> = emptyList(),
     val lastFeedback: FeedbackEvent? = null,
-    val difficulty: Difficulty = Difficulty.EASY
+    val difficulty: Difficulty = Difficulty.EASY,
+    val leftHandEnabled: Boolean = true  // Main gauche activée par défaut
 )
 
-// ── Moteur ────────────────────────────────────────────────────────────────
+// ━━ Moteur ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class SongPlayerEngine(
     private val song: Song,
@@ -70,10 +71,15 @@ class SongPlayerEngine(
     // Notes déjà programmées pour la MG (évite les doublons)
     private val scheduledLeftNotes = mutableSetOf<Int>()
 
-    // ── Actions publiques ──────────────────────────────────────────────
+    // ━━ Actions publiques ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     fun selectDifficulty(d: Difficulty) {
         state = state.copy(difficulty = d)
+    }
+
+    /** Active ou désactive la main gauche */
+    fun setLeftHandEnabled(enabled: Boolean) {
+        state = state.copy(leftHandEnabled = enabled)
     }
 
     fun start() {
@@ -103,7 +109,7 @@ class SongPlayerEngine(
         scheduledLeftNotes.clear()
         missedRightNotes.clear()
         noteIdCounter = 0
-        state = SongPlayerState(difficulty = state.difficulty)
+        state = SongPlayerState(difficulty = state.difficulty, leftHandEnabled = state.leftHandEnabled)
     }
 
     /** Appelé quand le joueur appuie sur une touche main droite */
@@ -164,7 +170,7 @@ class SongPlayerEngine(
         }
     }
 
-    // ── Boucle principale ──────────────────────────────────────────────
+    // ━━ Boucle principale ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     private fun startLoop() {
         gameLoopJob?.cancel()
@@ -199,6 +205,9 @@ class SongPlayerEngine(
     }
 
     private fun scheduleLeftHandNotes(currentBeat: Float, bpm: Float) {
+        // Ne pas jouer les notes de la main gauche si l'option est désactivée
+        if (!state.leftHandEnabled) return
+
         val lookAheadBeats = 0.3f
         song.notes
             .filter { it.hand == Hand.LEFT }
@@ -236,7 +245,7 @@ class SongPlayerEngine(
         }
     }
 
-    // ── Accesseur ─────────────────────────────────────────────────────
+    // ━━ Accesseur ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     /** Notes à afficher dans la fenêtre visible (±visibleBeats autour de currentBeat) */
     fun visibleNotes(visibleBeats: Float = 8f): List<SongNote> {
