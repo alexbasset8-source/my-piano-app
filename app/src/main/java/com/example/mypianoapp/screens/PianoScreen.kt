@@ -32,6 +32,7 @@ import com.example.mypianoapp.audio.MetronomeEngine
 import com.example.mypianoapp.audio.PianoSoundEngine
 import com.example.mypianoapp.ui.theme.*
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.launch
 
 @Composable
@@ -75,7 +76,7 @@ fun PianoScreen(
     // Chrono session
     LaunchedEffect(Unit) {
         while (true) {
-            delay(1_000)
+            delay(1_000.milliseconds)
             sessionSeconds++
             if (sessionSeconds % 60 == 0) onMinutesPlayed(1)
         }
@@ -171,7 +172,7 @@ fun PianoScreen(
                                 detectTapGestures(onPress = {
                                     pressedKey = note
                                     if (soundReady) soundEngine.play(note)
-                                    scope.launch { delay(400); if (pressedKey == note) pressedKey = null }
+                                    scope.launch { delay(400.milliseconds); if (pressedKey == note) pressedKey = null }
                                     tryAwaitRelease()
                                     if (pressedKey == note) pressedKey = null
                                 })
@@ -202,7 +203,7 @@ fun PianoScreen(
                             detectTapGestures(onPress = {
                                 pressedKey = noteName
                                 if (soundReady) soundEngine.play(noteName)
-                                scope.launch { delay(400); if (pressedKey == noteName) pressedKey = null }
+                                scope.launch { delay(400.milliseconds); if (pressedKey == noteName) pressedKey = null }
                                 tryAwaitRelease()
                                 if (pressedKey == noteName) pressedKey = null
                             })

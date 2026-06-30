@@ -421,11 +421,11 @@ private fun SongKeyboard(
             .padding(horizontal = 4.dp, vertical = 4.dp)
     ) {
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            val totalWidth  = this.maxWidth
+            val totalWidth  = maxWidth
             val whiteWidth  = totalWidth / whiteKeys.size
             val gap         = 2.dp
             val blackWidth  = whiteWidth * 0.62f
-            val blackHeight = this.maxHeight * 0.58f
+            val blackHeight = maxHeight * 0.58f
 
             // Touches blanches
             Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(gap)) {
